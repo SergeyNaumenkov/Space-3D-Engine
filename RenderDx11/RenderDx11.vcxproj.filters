@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{5b5e64ad-4814-414e-9f4d-4aff2e094964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Buffers">
+      <UniqueIdentifier>{f12d8bdb-f543-4b1b-8a14-0c3572b762e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render State">
+      <UniqueIdentifier>{c4fa171d-e70a-4fb0-aaa1-751ba6ca3ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Display">
+      <UniqueIdentifier>{89a9f5b6-8d99-4d47-a6b4-b8e1284a9864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loaders">
+      <UniqueIdentifier>{5e5de38c-3a1e-401b-9ae5-0387de77a4dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loaders\dds">
+      <UniqueIdentifier>{e40c3a41-3e6a-4876-a05b-4213f8e1b6d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Third-Party">
+      <UniqueIdentifier>{2ddd6d2d-60c2-4917-b491-4f7ec75e3f83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Third-Party\DirectDrawSurface">
+      <UniqueIdentifier>{4256b026-bc49-4b55-b64b-ad8a410bb71d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Third-Party\stb">
+      <UniqueIdentifier>{3bad643f-a6ce-444d-a89b-872b89c84a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loaders\STB Loader">
+      <UniqueIdentifier>{c431ec7b-8928-4882-9763-24b27b566302}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\public\RenderDx11\IRenderDx11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BaseRenderData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDevicesInternal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh2D.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11States.h">
+      <Filter>Source Files\Render State</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Source Files\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLoader.h">
+      <Filter>Source Files\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\DDSTextureLoader.h">
+      <Filter>Source Files\Third-Party\DirectDrawSurface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MaterialSystem\stb_image.h">
+      <Filter>Source Files\Third-Party\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectDrawSurface.h">
+      <Filter>Source Files\Loaders\dds</Filter>
+    </ClInclude>
+    <ClInclude Include="StbLoader.h">
+      <Filter>Source Files\Loaders\STB Loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderDx11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh2D.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11States.cpp">
+      <Filter>Source Files\Render State</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>Source Files\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialLoader.cpp">
+      <Filter>Source Files\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\DDSTextureLoader.cpp">
+      <Filter>Source Files\Third-Party\DirectDrawSurface</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectDrawSurface.cpp">
+      <Filter>Source Files\Loaders\dds</Filter>
+    </ClCompile>
+    <ClCompile Include="StbLoader.cpp">
+      <Filter>Source Files\Loaders\STB Loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

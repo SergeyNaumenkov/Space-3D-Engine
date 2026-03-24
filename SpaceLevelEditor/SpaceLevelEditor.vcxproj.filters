@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Front-End">
+      <UniqueIdentifier>{2f0e662b-05af-4559-ad83-cc220be7d360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End">
+      <UniqueIdentifier>{c67242b6-076d-4b34-8729-7dd425448a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Core">
+      <UniqueIdentifier>{a4a64a88-4ae5-4c20-b509-6ce040490f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Render">
+      <UniqueIdentifier>{2eb702bc-195a-4130-b7d7-98c15b22712e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Third-Party">
+      <UniqueIdentifier>{a7e732a5-ad5e-4322-a97b-be90795ccd08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Ray Casting">
+      <UniqueIdentifier>{4a581e25-5ae3-41f4-9fcb-8a4c56e6b65d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Map Compilers">
+      <UniqueIdentifier>{de1d9e76-584a-4557-ada3-97a1d8fe9a9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Objects Manager">
+      <UniqueIdentifier>{c3574b04-82bb-4808-871b-ff43b6e28a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Objects Manager\Transform">
+      <UniqueIdentifier>{a09fbb00-3d3d-48b8-99f3-9ddf98556860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Scene">
+      <UniqueIdentifier>{f02459d4-316c-44ae-a0cf-7a02e2318c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Camera">
+      <UniqueIdentifier>{66052571-9d48-4921-8fca-d40675c57f7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Primitives">
+      <UniqueIdentifier>{8138ad84-e742-4246-81fd-40638b4372db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Primitives\Box">
+      <UniqueIdentifier>{8071ec86-224a-4bd4-8217-cd45bc6352f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Math">
+      <UniqueIdentifier>{d2eb7776-12e6-492d-89e2-0e194b008a4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Light">
+      <UniqueIdentifier>{06b7127b-7b15-446a-9867-3c2cf46259e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Light\Point Light">
+      <UniqueIdentifier>{f3ab924f-9387-47f7-9f6f-58a083ba2958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Light\Directional Light">
+      <UniqueIdentifier>{a5a1e686-c3d3-4977-bc53-bc7b08ce5b56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Light\Ambient Light">
+      <UniqueIdentifier>{567baabd-4918-4a03-9225-d0cacc82eec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Light\Spot Light">
+      <UniqueIdentifier>{6107c015-3c57-4b86-a695-ab27dbcf628c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Back-End\Settings">
+      <UniqueIdentifier>{125e7d24-6382-43ec-ae4e-ccf22a56d869}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWindow.cpp">
+      <Filter>Source Files\Back-End\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files\Back-End\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="3DCamera.cpp">
+      <Filter>Source Files\Back-End\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderScene.cpp">
+      <Filter>Source Files\Back-End\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RayCast.cpp">
+      <Filter>Source Files\Back-End\Ray Casting</Filter>
+    </ClCompile>
+    <ClCompile Include="MapCompiler.cpp">
+      <Filter>Source Files\Back-End\Map Compilers</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTransform.cpp">
+      <Filter>Source Files\Back-End\Objects Manager\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="MapBox.cpp">
+      <Filter>Source Files\Back-End\Primitives\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="SolidObjectsController.cpp">
+      <Filter>Source Files\Back-End\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Source Files\Back-End\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Source Files\Back-End\Light\Ambient Light</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSettings.cpp">
+      <Filter>Source Files\Back-End\Settings</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EditorWindow.h">
+      <Filter>Source Files\Back-End\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Source Files\Back-End\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="3DCamera.h">
+      <Filter>Source Files\Back-End\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderScene.h">
+      <Filter>Source Files\Back-End\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="RayCast.h">
+      <Filter>Source Files\Back-End\Ray Casting</Filter>
+    </ClInclude>
+    <ClInclude Include="MapCompiler.h">
+      <Filter>Source Files\Back-End\Map Compilers</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTransform.h">
+      <Filter>Source Files\Back-End\Objects Manager\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectTransformDefs.h">
+      <Filter>Source Files\Back-End\Objects Manager\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Map\LevelMapDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapBox.h">
+      <Filter>Source Files\Back-End\Primitives\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Source Files\Back-End\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="IMapSolidObject.h">
+      <Filter>Source Files\Back-End\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="SolidObjectsController.h">
+      <Filter>Source Files\Back-End\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Source Files\Back-End\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ILightShared.h">
+      <Filter>Source Files\Back-End\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLight.h">
+      <Filter>Source Files\Back-End\Light\Ambient Light</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorSettings.h">
+      <Filter>Source Files\Back-End\Settings</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

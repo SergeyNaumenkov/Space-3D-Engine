@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\public interfaces">
+      <UniqueIdentifier>{c71ba559-027c-4eff-911e-e2622b958edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Constant Buffers">
+      <UniqueIdentifier>{9027b2ae-aaf6-440c-94ae-f3877228b6dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader matrix">
+      <UniqueIdentifier>{7f323b03-532a-42ce-931e-c0f6a0d692ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platforms">
+      <UniqueIdentifier>{d40deaed-0d12-44d0-b1a1-0cab1ea738e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platforms\D3d11">
+      <UniqueIdentifier>{3cacefc8-083d-4160-b7ab-a995495de87d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderConstantBuffer.cpp">
+      <Filter>Source Files\Constant Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderMatrix.cpp">
+      <Filter>Source Files\Shader matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11Shader.cpp">
+      <Filter>Source Files\Platforms\D3d11</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\public\ShaderSystem\IShaderSystem.h">
+      <Filter>Header Files\public interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderSystem\ShaderBundle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderSystem\IShaderMatrix.h">
+      <Filter>Header Files\public interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderConstantBuffer.h">
+      <Filter>Source Files\Constant Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderSystem\DefaultShaderConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderMatrix.h">
+      <Filter>Source Files\Shader matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ShaderSystem\ShaderTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11Shader.h">
+      <Filter>Source Files\Platforms\D3d11</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

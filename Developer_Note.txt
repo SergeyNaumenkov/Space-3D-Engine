@@ -1,0 +1,12 @@
+1. Implement custom shader compiler
+ -> A configuration file must be associated with the shader
+     that describes the input data of the layout so that this data is not hard-coded in the engine.!
+
+2. Export map from level editor
+3. Parse map in engine
+4. Full rendering parsed map and all primitives and objects from map
+5. Collision detection for parsed map
+
+--------------------------------------
+
+1. Write code in engine for management of lights which be used in Level Editor and Game - > Not Done!
