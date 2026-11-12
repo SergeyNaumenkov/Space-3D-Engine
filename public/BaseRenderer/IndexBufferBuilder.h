@@ -15,6 +15,10 @@
 
 #include <vector>
 
+// Vertices and indices count for one quad
+constexpr int VerticesPerQuad = 4;
+constexpr int IndicesPerQuad = 6;
+
 class IndexBufferBuilder
 {
 public:
@@ -26,14 +30,16 @@ public:
 	// Unlock buffer
 	void Unlock( );
 
-	// Get indices offset
-	int CalculateIndicesCountForBatch( int startIndexLocation, int baseVertexLoc, int currentSize );
+	// Get indices count for batch with given vertices count
+	static int CalculateIndicesCountForBatch( int verticesCount );
 
-	// Generate indices
+	// Generate quad indices for one batch.
+	// Indices are local for batch ( 0..VertexCount-1 ),
+	// so one generated buffer is shared between all batches
 	void GenerateIndices( int VertexCount );
 
 	// Get indices buffer
-	std::vector<unsigned short> GetIndicesBuffer( );
+	const std::vector<unsigned short>& GetIndicesBuffer( ) const;
 
 private:
 	std::vector<unsigned short> mBufferIndices;
@@ -44,7 +50,7 @@ private:
 */
 inline IndexBufferBuilder::IndexBufferBuilder( )
 {
-	mBufferIndices.resize( 2048 );
+	mBufferIndices.reserve( 2048 );
 }
 
 /*
@@ -65,25 +71,12 @@ inline void IndexBufferBuilder::Unlock( )
 }
 
 /*
-	Get indices set
+	Get indices count for batch with given vertices count
 */
-inline int IndexBufferBuilder::CalculateIndicesCountForBatch( int startIndexLocation, int baseVertexLoc, int currentSize )
+inline int IndexBufferBuilder::CalculateIndicesCountForBatch( int verticesCount )
 {
-	int indicesCount = 0;
-
-	for( int i = startIndexLocation; i < mBufferIndices.size( ); i++ )
-	{
-		if( mBufferIndices[ i ] < baseVertexLoc + currentSize )
-		{
-			indicesCount++;
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	return indicesCount;
+	// Only full quads are drawn
+	return ( verticesCount / VerticesPerQuad ) * IndicesPerQuad;
 }
 
 /*
@@ -91,31 +84,35 @@ inline int IndexBufferBuilder::CalculateIndicesCountForBatch( int startIndexLoca
 */
 inline void IndexBufferBuilder::GenerateIndices( int VertexCount )
 {
-	unsigned short start = 0;
-	auto total = VertexCount / 4;
-	auto bufferOffset = mBufferIndices.size( );
-	auto s = sizeof( unsigned short );
-	for( unsigned short i = 0; i < total; i++ )
+	// Indices are stored as 16-bit values
+	if( VertexCount > 0xFFFF + 1 )
+		VertexCount = 0xFFFF + 1;
+
+	mBufferIndices.clear( );
+
+	unsigned int start = 0;
+	auto total = VertexCount / VerticesPerQuad;
+	for( int i = 0; i < total; i++ )
 	{
 		// Make first triangle
-		mBufferIndices.push_back( start );
-		mBufferIndices.push_back( start + 1 );
-		mBufferIndices.push_back( start + 2 );
+		mBufferIndices.push_back( static_cast< unsigned short >( start ) );
+		mBufferIndices.push_back( static_cast< unsigned short >( start + 1 ) );
+		mBufferIndices.push_back( static_cast< unsigned short >( start + 2 ) );
 
 		// Make second triangle
-		mBufferIndices.push_back( start );
-		mBufferIndices.push_back( start + 2 );
-		mBufferIndices.push_back( start + 3 );
+		mBufferIndices.push_back( static_cast< unsigned short >( start ) );
+		mBufferIndices.push_back( static_cast< unsigned short >( start + 2 ) );
+		mBufferIndices.push_back( static_cast< unsigned short >( start + 3 ) );
 
 		// Next
-		start += 4;
+		start += VerticesPerQuad;
 	}
 }
 
 /*
 	Get indices buffer
 */
-inline std::vector<unsigned short> IndexBufferBuilder::GetIndicesBuffer( )
+inline const std::vector<unsigned short>& IndexBufferBuilder::GetIndicesBuffer( ) const
 {
 	return mBufferIndices;
 }

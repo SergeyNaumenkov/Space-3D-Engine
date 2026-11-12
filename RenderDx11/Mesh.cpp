@@ -9,7 +9,7 @@
 
 */
 
-#include <iostream>
+#include <algorithm>
 
 #include "Mesh.h"
 #include "Math/ColorVertex.h"
@@ -46,7 +46,9 @@ Mesh::~Mesh( )
 void Mesh::LockMesh( MeshType_t meshType, MeshRenderType_t renderType )
 {
     mVertexBuffer.Lock( );
-    mIndexBuffer.Lock( );
+
+    mMeshType = meshType;
+    mMeshRenderType = renderType;
 }
 
 /*
@@ -87,7 +89,6 @@ void Mesh::AddNormalFloat3( Vector3Df normal )
 void Mesh::UnlockMesh( )
 {
     mVertexBuffer.Unlock( );
-    mIndexBuffer.Unlock( );
 }
 
 /*
@@ -95,33 +96,37 @@ void Mesh::UnlockMesh( )
 */
 void Mesh::DrawMesh( )
 {
-    // First - generate indices for saved vertices data
-    mIndexBuffer.GenerateIndices( mVertexBuffer.GetVertexPositionFloat3( ).size( ) );
+    if( !mVertexRenderBuffer || !mIndexRenderBuffer )
+        return;
 
     // Bind primitive topology
     auto devices = GetRenderDevicesInternal( );
+    auto context = devices->mDeviceContext;
     switch( mMeshRenderType )
     {
         case MeshRenderType_t::Render_Triangles:
-            devices->mDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+            context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
             break;
         case MeshRenderType_t::Render_Lines:
-            devices->mDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
+            context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
             break;
         case MeshRenderType_t::Render_Points:
-            devices->mDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_POINTLIST );
+            context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_POINTLIST );
             break;
         default:
             // Unknown type.
             // Set default primitive topology
-            devices->mDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+            context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
             break;
     }
 
-    // Update index buffer 
-    UpdateIndexBuffer( );
+    // Bind render buffers
+    UINT stride = sizeof( TexturedVertex_t );
+    UINT offset = 0;
+    context->IASetVertexBuffers( 0, 1, &mVertexRenderBuffer, &stride, &offset );
+    context->IASetIndexBuffer( mIndexRenderBuffer, DXGI_FORMAT_R16_UINT, 0 );
 
-    // Update vertex buffer
+    // Upload vertices and draw them by batches
     UpdateVertexBuffer( );
 }
 
@@ -136,23 +141,37 @@ void Mesh::MakeRenderBuffer( )
     auto devices = GetRenderDevicesInternal( );
 
     D3D11_BUFFER_DESC bufferDesc = { };
-    bufferDesc.ByteWidth = 2048;
+    bufferDesc.ByteWidth = MaxBatchVertices * sizeof( TexturedVertex_t );
     bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-    devices->mDevice->CreateBuffer( &bufferDesc, nullptr, &mVertexRenderBuffer );
+    if( FAILED( devices->mDevice->CreateBuffer( &bufferDesc, nullptr, &mVertexRenderBuffer ) ) )
+    {
+        PrintError( "Mesh -> Failed create vertex buffer!" );
+        return;
+    }
+
+    // Indices are local for batch, so they are generated once
+    // and shared between all batches
+    mIndexBuffer.GenerateIndices( MaxBatchVertices );
+    const auto& indices = mIndexBuffer.GetIndicesBuffer( );
 
     bufferDesc = { };
-    bufferDesc.ByteWidth = 2048;
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = static_cast< UINT >( indices.size( ) * sizeof( unsigned short ) );
+    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
     bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
 
-    devices->mDevice->CreateBuffer( &bufferDesc, nullptr, &mIndexRenderBuffer );
+    D3D11_SUBRESOURCE_DATA indexData = { };
+    indexData.pSysMem = indices.data( );
+
+    if( FAILED( devices->mDevice->CreateBuffer( &bufferDesc, &indexData, &mIndexRenderBuffer ) ) )
+    {
+        PrintError( "Mesh -> Failed create index buffer!" );
+        return;
+    }
 }
 
-int totalDrawCallCounts = 0;
 /*
     Update vertex buffer
 */
@@ -161,109 +180,54 @@ void Mesh::UpdateVertexBuffer( )
     auto devices = GetRenderDevicesInternal( );
     auto context = devices->mDeviceContext;
 
-    // Lock render buffer
-    D3D11_MAPPED_SUBRESOURCE map;
-    context->Map( mVertexRenderBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map );
-
     // Data
-    auto vertexPosition = mVertexBuffer.GetVertexPositionFloat3( );
-    auto vertexUV = mVertexBuffer.GetVertexUV( );
-    auto vertexNormal = mVertexBuffer.GetVertexNormal( );
+    const auto& vertexPosition = mVertexBuffer.GetVertexPositionFloat3( );
+    const auto& vertexUV = mVertexBuffer.GetVertexUV( );
+    const auto& vertexNormal = mVertexBuffer.GetVertexNormal( );
 
-    auto data = reinterpret_cast< TexturedVertex_t* >( map.pData );
-    auto maxVertexBufferSize = mVertexBuffer.GetMaxBufferSize( );
-
-    int totalSize = 0;
-    int startIndexLocation = 0;
-    int baseVertexLocation = 0;
-
-    for( int i = 0; i < mVertexBuffer.GetVertexPositionFloat3( ).size( ); i++ )
+    int verticesCount = static_cast< int >( vertexPosition.size( ) );
+    for( int batchStart = 0; batchStart < verticesCount; batchStart += MaxBatchVertices )
     {
-        if( IsBufferOverflow( totalSize, sizeof( TexturedVertex_t ) ) )
+        int batchSize = ( std::min )( MaxBatchVertices, verticesCount - batchStart );
+
+        // Lock render buffer
+        D3D11_MAPPED_SUBRESOURCE map;
+        if( FAILED( context->Map( mVertexRenderBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map ) ) )
         {
-            // Draw part
-            context->Unmap( mVertexRenderBuffer, 0 );
-
-            UINT stride = sizeof( TexturedVertex_t );
-            UINT offset = 0;
-            context->IASetVertexBuffers( 0, 1, &mVertexRenderBuffer, &stride, &offset );
-
-            // Calculate how many indices correspond to the current batch
-            int indicesCount = mIndexBuffer.CalculateIndicesCountForBatch( startIndexLocation, baseVertexLocation, totalSize );
-
-            // Draw current batch
-            devices->mDeviceContext->DrawIndexed( indicesCount, startIndexLocation, baseVertexLocation );
-            totalDrawCallCounts++;
-
-            // Update for the next batch
-            startIndexLocation += indicesCount;
-            baseVertexLocation += totalSize;
-
-            // Re-map buffer for the next part
-            context->Map( mVertexRenderBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map );
-
-            // Bind next batch packet into gpu buffer
-            data = reinterpret_cast< TexturedVertex_t* >( map.pData );
-            totalSize = 0;
+            PrintError( "Mesh -> Failed map vertex buffer!" );
+            return;
         }
 
-        data[ totalSize ].position = vertexPosition[ i ];
-        data[ totalSize ].uv = vertexUV[ i ];
-        data[ totalSize ].normal = vertexNormal[ i ];
+        // Fill current batch. Uv and normal are optional
+        auto data = reinterpret_cast< TexturedVertex_t* >( map.pData );
+        for( int i = 0; i < batchSize; i++ )
+        {
+            size_t vertex = static_cast< size_t >( batchStart + i );
 
-        totalSize++;
+            data[ i ].position = vertexPosition[ vertex ];
+            data[ i ].uv = vertex < vertexUV.size( ) ? vertexUV[ vertex ] : Vector2Df( );
+            data[ i ].normal = vertex < vertexNormal.size( ) ? vertexNormal[ vertex ] : Vector3Df( );
+        }
+
+        // Unlock render buffer
+        context->Unmap( mVertexRenderBuffer, 0 );
+
+        // Draw current batch
+        DrawBatch( batchSize );
     }
-
-    // Final draw for remaining vertices
-    context->Unmap( mVertexRenderBuffer, 0 );
-
-    UINT stride = sizeof( TexturedVertex_t );
-    UINT offset = 0;
-    context->IASetVertexBuffers( 0, 1, &mVertexRenderBuffer, &stride, &offset );
-
-    // Draw last part
-    int remainingIndicesCount = mIndexBuffer.CalculateIndicesCountForBatch( startIndexLocation, baseVertexLocation, totalSize );
-    devices->mDeviceContext->DrawIndexed( remainingIndicesCount, startIndexLocation, baseVertexLocation );
-    totalDrawCallCounts++;
-
-    PrintMessage( "Total draw calls: (%i)!", totalDrawCallCounts );
-    totalDrawCallCounts = 0;
 }
 
 /*
-    Update index buffer
+    Draw batch from vertex buffer
 */
-void Mesh::UpdateIndexBuffer( )
+void Mesh::DrawBatch( int verticesCount )
 {
     auto devices = GetRenderDevicesInternal( );
-    auto context = devices->mDeviceContext;
 
-    // Lock render buffer
-    D3D11_MAPPED_SUBRESOURCE map;
-    context->Map( mIndexRenderBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map );
-
-    // Data
-    auto indexBufferData = mIndexBuffer.GetIndicesBuffer( );
-    auto data = reinterpret_cast< unsigned short* >( map.pData );
-    for( int i = 0; i < mIndexBuffer.GetIndicesBuffer( ).size( ); i++ )
-    {
-        data[ i ] = indexBufferData[ i ];
-    }
-
-    // Unlock render buffer
-    context->Unmap( mIndexRenderBuffer, 0 );
-
-    // Insert buffer
-    context->IASetIndexBuffer( mIndexRenderBuffer, DXGI_FORMAT_R16_UINT, 0 );
-}
-
-/*
-    Check buffer overflow
-*/
-bool Mesh::IsBufferOverflow( int currentVertexOffset, int gpuDataStructSize )
-{
-    if( currentVertexOffset * gpuDataStructSize >= mVertexBuffer.GetMaxBufferSize( ) )
-        return true;
-
-    return false;
+    // Triangles are built from quads by index buffer,
+    // lines and points are drawn as is
+    if( mMeshRenderType == MeshRenderType_t::Render_Lines || mMeshRenderType == MeshRenderType_t::Render_Points )
+        devices->Draw( verticesCount, 0 );
+    else
+        devices->DrawIndexed( IndexBufferBuilder::CalculateIndicesCountForBatch( verticesCount ), 0, 0 );
 }

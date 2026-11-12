@@ -54,17 +54,17 @@ public:
 	void AddColor( unsigned long color );
 
 	// Get position
-	std::vector<Vector3Df> GetVertexPositionFloat3( );
-	std::vector<Vector2Df> GetVertexPositionFloat2( );
+	const std::vector<Vector3Df>& GetVertexPositionFloat3( ) const;
+	const std::vector<Vector2Df>& GetVertexPositionFloat2( ) const;
 
 	// Get Normal vector
-	std::vector<Vector3Df> GetVertexNormal( );
+	const std::vector<Vector3Df>& GetVertexNormal( ) const;
 
 	// Get uv
-	std::vector<Vector2Df> GetVertexUV( );
+	const std::vector<Vector2Df>& GetVertexUV( ) const;
 
 	// Get color
-	std::vector<unsigned long> GetVertexColor( );
+	const std::vector<unsigned long>& GetVertexColor( ) const;
 
 	// Get max buffer size
 	int GetMaxBufferSize( );
@@ -112,16 +112,16 @@ inline bool VertexBufferBuilder::Prepare( )
 {
 	if( mVertexBufferType == VertexBufferBuilderType_t::VB_For3D )
 	{
-		mVertexPositionFloat3.resize( mVertexMaxSize );
+		mVertexPositionFloat3.reserve( mVertexMaxSize );
 	}
 	else
 	{
-		mVertexPositionFloat2.resize( mVertexMaxSize );
+		mVertexPositionFloat2.reserve( mVertexMaxSize );
 	}
 
-	mVertexUV.resize( mVertexMaxSize );
-	mVertexColor.resize( mVertexMaxSize );
-	mVertexNormal.resize( mVertexMaxSize );
+	mVertexUV.reserve( mVertexMaxSize );
+	mVertexColor.reserve( mVertexMaxSize );
+	mVertexNormal.reserve( mVertexMaxSize );
 
 	return true;
 }
@@ -204,7 +204,7 @@ inline void VertexBufferBuilder::AddColor( unsigned long color )
 /*
 	Get position
 */
-inline std::vector<Vector3Df> VertexBufferBuilder::GetVertexPositionFloat3( )
+inline const std::vector<Vector3Df>& VertexBufferBuilder::GetVertexPositionFloat3( ) const
 {
 	return mVertexPositionFloat3;
 }
@@ -212,7 +212,7 @@ inline std::vector<Vector3Df> VertexBufferBuilder::GetVertexPositionFloat3( )
 /*
 	Get vertex 3D position
 */
-inline std::vector<Vector2Df> VertexBufferBuilder::GetVertexPositionFloat2( )
+inline const std::vector<Vector2Df>& VertexBufferBuilder::GetVertexPositionFloat2( ) const
 {
 	return mVertexPositionFloat2;
 }
@@ -220,7 +220,7 @@ inline std::vector<Vector2Df> VertexBufferBuilder::GetVertexPositionFloat2( )
 /*
 	Get Normal vector
 */
-inline std::vector<Vector3Df> VertexBufferBuilder::GetVertexNormal( )
+inline const std::vector<Vector3Df>& VertexBufferBuilder::GetVertexNormal( ) const
 {
 	return mVertexNormal;
 }
@@ -228,7 +228,7 @@ inline std::vector<Vector3Df> VertexBufferBuilder::GetVertexNormal( )
 /*
 	Get uv
 */
-inline std::vector<Vector2Df> VertexBufferBuilder::GetVertexUV( )
+inline const std::vector<Vector2Df>& VertexBufferBuilder::GetVertexUV( ) const
 {
 	return mVertexUV;
 }
@@ -236,7 +236,7 @@ inline std::vector<Vector2Df> VertexBufferBuilder::GetVertexUV( )
 /*
 	Get color
 */
-inline std::vector<unsigned long> VertexBufferBuilder::GetVertexColor( )
+inline const std::vector<unsigned long>& VertexBufferBuilder::GetVertexColor( ) const
 {
 	return mVertexColor;
 }

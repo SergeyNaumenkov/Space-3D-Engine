@@ -58,12 +58,6 @@ protected:
 	// Update mesh font
 	void UpdateFontMesh( );
 
-	// Update index buffer
-	void UpdateIndexBuffer( );
-
-	// Check buffer overflow
-	bool IsBufferOverflow( int currentVertexOffset, int gpuDataStructSize );
-
 private:
 	VertexBufferBuilder mVertexBufferBuilder;
 	IndexBufferBuilder mIndexBufferBuilder;

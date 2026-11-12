@@ -17,6 +17,9 @@
 
 #include "Core/Debug.h"
 
+// Max vertices in one gpu batch ( must be multiple of 4, so quads are never split )
+constexpr int MaxBatchVertices = 4096;
+
 struct RenderDevicesInternal_t
 {
     RenderDevicesInternal_t( )
@@ -30,6 +33,12 @@ struct RenderDevicesInternal_t
     void DrawIndexed( UINT indexCount, UINT startIndex, INT  baseVertex )
     {
         mDeviceContext->DrawIndexed( indexCount, startIndex, baseVertex );
+        mTotalDrawCalls++;
+    }
+
+    void Draw( UINT vertexCount, UINT startVertex )
+    {
+        mDeviceContext->Draw( vertexCount, startVertex );
         mTotalDrawCalls++;
     }
 

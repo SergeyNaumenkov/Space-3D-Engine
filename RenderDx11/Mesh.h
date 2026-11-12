@@ -54,11 +54,8 @@ protected:
     // Update vertex buffer
     void UpdateVertexBuffer( );
 
-    // Update index buffer
-    void UpdateIndexBuffer( );
-
-    // Check buffer overflow
-    bool IsBufferOverflow( int currentVertexOffset, int gpuDataStructSize );
+    // Draw batch from vertex buffer
+    void DrawBatch( int verticesCount );
 
 private:
     VertexBufferBuilder mVertexBuffer;
